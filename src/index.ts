@@ -109,7 +109,7 @@ export async function getSession(
 
   const data = await response.json();
   if (data && typeof data === 'object' && Object.keys(data).length > 0) {
-    return data as Session;
+    return data as unknown as Session;
   }
   return null;
 }
