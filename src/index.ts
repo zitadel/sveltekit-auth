@@ -49,7 +49,7 @@ export type SvelteKitAuthConfig = Omit<AuthConfig, 'raw'>;
  * Creates a SvelteKit auth handler.
  *
  * @param config - Auth.js configuration
- * @returns Object containing a `handle` hook for hooks.server.ts
+ * @returns Object containing a `handle` hook, plus `signIn` and `signOut` helpers
  *
  * @example
  * ```ts
@@ -57,26 +57,59 @@ export type SvelteKitAuthConfig = Omit<AuthConfig, 'raw'>;
  * import { SvelteKitAuth } from '@zitadel/sveltekit-auth';
  * import Zitadel from '@auth/core/providers/zitadel';
  *
- * export const { handle } = SvelteKitAuth({
+ * export const { handle, signIn, signOut } = SvelteKitAuth({
  *   providers: [Zitadel({ ... })],
  *   secret: process.env.AUTH_SECRET,
  * });
  * ```
  */
-export function SvelteKitAuth(config: SvelteKitAuthConfig): { handle: Handle } {
+export function SvelteKitAuth(config: SvelteKitAuthConfig): {
+  handle: Handle;
+  signIn: (
+    provider?: string,
+    options?: { redirectTo?: string },
+  ) => Promise<Response>;
+  signOut: (options?: { redirectTo?: string }) => Promise<Response>;
+} {
+  config.basePath ??= '/auth';
   setEnvDefaults(process.env, config);
 
-  const basePath = (config.basePath ?? '/auth').replace(/\/$/, '');
+  const bp = config.basePath.replace(/\/$/, '');
 
   const handle: Handle = async ({ event, resolve }) => {
-    if (event.url.pathname.startsWith(basePath + '/')) {
+    if (event.url.pathname.startsWith(bp + '/')) {
       const response = await Auth(event.request, config);
       return response;
     }
     return resolve(event);
   };
 
-  return { handle };
+  async function signIn(
+    provider?: string,
+    options: { redirectTo?: string } = {},
+  ): Promise<Response> {
+    const params = new URLSearchParams();
+    if (options.redirectTo) params.set('callbackUrl', options.redirectTo);
+    const paramStr = params.toString();
+    const url = provider
+      ? `${bp}/signin/${provider}${paramStr ? `?${paramStr}` : ''}`
+      : `${bp}/signin${paramStr ? `?${paramStr}` : ''}`;
+    return Response.redirect(url, 302);
+  }
+
+  async function signOut(
+    options: { redirectTo?: string } = {},
+  ): Promise<Response> {
+    const params = new URLSearchParams();
+    if (options.redirectTo) params.set('callbackUrl', options.redirectTo);
+    const paramStr = params.toString();
+    return Response.redirect(
+      `${bp}/signout${paramStr ? `?${paramStr}` : ''}`,
+      302,
+    );
+  }
+
+  return { handle, signIn, signOut };
 }
 
 /**
@@ -107,9 +140,9 @@ export async function getSession(
     config,
   );
 
-  const data = await response.json();
-  if (data && typeof data === 'object' && Object.keys(data).length > 0) {
-    return data as unknown as Session;
-  }
-  return null;
+  const { status } = response;
+  const data = (await response.json()) as Record<string, unknown> | null;
+  if (!data || !Object.keys(data).length) return null;
+  if (status === 200) return data as unknown as Session;
+  throw new Error((data as { message?: string }).message ?? 'Session error');
 }
