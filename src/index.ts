@@ -124,6 +124,7 @@ export async function getSession(
   config: SvelteKitAuthConfig,
 ): Promise<Session | null> {
   setEnvDefaults(process.env, config);
+  config.basePath ??= '/auth';
 
   const url = createActionURL(
     'session',
