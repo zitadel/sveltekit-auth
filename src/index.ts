@@ -62,6 +62,13 @@ export type SvelteKitAuthConfig = Omit<AuthConfig, 'raw'>;
  *   secret: process.env.AUTH_SECRET,
  * });
  * ```
+ *
+ * @example
+ * ```ts
+ * // src/hooks.server.ts
+ * import { handle } from '$lib/auth/auth';
+ * export { handle };
+ * ```
  */
 export function SvelteKitAuth(config: SvelteKitAuthConfig): {
   handle: Handle;
@@ -118,6 +125,14 @@ export function SvelteKitAuth(config: SvelteKitAuthConfig): {
  * @param event - The SvelteKit RequestEvent
  * @param config - Auth.js configuration
  * @returns The session object or null
+ *
+ * @example
+ * ```ts
+ * import { getSession } from '@zitadel/sveltekit-auth';
+ * import { authOptions } from '$lib/auth/auth';
+ *
+ * const session = await getSession(event, authOptions);
+ * ```
  */
 export async function getSession(
   event: RequestEvent,
