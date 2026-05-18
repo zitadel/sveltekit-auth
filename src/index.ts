@@ -52,14 +52,34 @@ export type RequestEvent = {
 export type SvelteKitAuthConfig = Omit<AuthConfig, 'raw'>;
 
 /**
+ * Either a static {@link SvelteKitAuthConfig} object or a request-scoped
+ * factory `(event) => SvelteKitAuthConfig`.
+ *
+ * The factory form defers config evaluation until request time, which keeps
+ * server-only imports out of any code path the bundler can reach from a
+ * client entry point. Useful when reading config from request-scoped env
+ * (Cloudflare Workers, Deno Deploy) rather than from `process.env`.
+ *
+ * @public
+ */
+export type SvelteKitAuthConfigOrFactory =
+  | SvelteKitAuthConfig
+  | ((event: RequestEvent) => SvelteKitAuthConfig);
+
+/**
  * Creates a SvelteKit auth handler.
  *
- * @param config - Auth.js configuration
+ * Accepts either a {@link SvelteKitAuthConfig} object or a request-scoped
+ * factory `(event) => SvelteKitAuthConfig`. The factory form defers config
+ * evaluation to request time, which keeps server-only imports off any
+ * client-reachable graph.
+ *
+ * @param rawConfig - Auth.js configuration object or factory function
  * @returns Object containing a `handle` hook, plus `signIn` and `signOut` helpers
  *
  * @example
  * ```ts
- * // src/lib/auth/auth.ts
+ * // src/lib/auth/auth.ts — object form
  * import { SvelteKitAuth } from '@zitadel/sveltekit-auth';
  * import Zitadel from '@auth/core/providers/zitadel';
  *
@@ -71,6 +91,19 @@ export type SvelteKitAuthConfig = Omit<AuthConfig, 'raw'>;
  *
  * @example
  * ```ts
+ * // src/lib/auth/auth.ts — factory form (request-scoped env)
+ * import { SvelteKitAuth } from '@zitadel/sveltekit-auth';
+ *
+ * export const { handle, signIn, signOut } = SvelteKitAuth((event) => ({
+ *   providers: [Zitadel({
+ *     clientId: event.request.headers.get('x-zitadel-client-id') ?? '',
+ *   })],
+ *   secret: process.env.AUTH_SECRET,
+ * }));
+ * ```
+ *
+ * @example
+ * ```ts
  * // src/hooks.server.ts
  * import { handle } from '$lib/auth/auth';
  * export { handle };
@@ -78,7 +111,7 @@ export type SvelteKitAuthConfig = Omit<AuthConfig, 'raw'>;
  *
  * @public
  */
-export function SvelteKitAuth(config: SvelteKitAuthConfig): {
+export function SvelteKitAuth(rawConfig: SvelteKitAuthConfigOrFactory): {
   handle: Handle;
   signIn: (
     provider?: string,
@@ -86,12 +119,21 @@ export function SvelteKitAuth(config: SvelteKitAuthConfig): {
   ) => Promise<Response>;
   signOut: (options?: { redirectTo?: string }) => Promise<Response>;
 } {
-  config.basePath ??= '/auth';
-  setEnvDefaults(process.env, config);
+  function resolveConfig(event: RequestEvent): SvelteKitAuthConfig {
+    const c = typeof rawConfig === 'function' ? rawConfig(event) : rawConfig;
+    c.basePath ??= '/auth';
+    setEnvDefaults(process.env, c);
+    return c;
+  }
 
-  const bp = config.basePath.replace(/\/$/, '');
+  function defaultBasePath(): string {
+    if (typeof rawConfig === 'function') return '/auth';
+    return (rawConfig.basePath ?? '/auth').replace(/\/$/, '');
+  }
 
   const handle: Handle = async ({ event, resolve }) => {
+    const config = resolveConfig(event as RequestEvent);
+    const bp = (config.basePath ?? '/auth').replace(/\/$/, '');
     if (event.url.pathname.startsWith(bp + '/')) {
       const response = await Auth(event.request, config);
       return response;
@@ -103,6 +145,7 @@ export function SvelteKitAuth(config: SvelteKitAuthConfig): {
     provider?: string,
     options: { redirectTo?: string } = {},
   ): Promise<Response> {
+    const bp = defaultBasePath();
     const params = new URLSearchParams();
     if (options.redirectTo) params.set('callbackUrl', options.redirectTo);
     const paramStr = params.toString();
@@ -115,6 +158,7 @@ export function SvelteKitAuth(config: SvelteKitAuthConfig): {
   async function signOut(
     options: { redirectTo?: string } = {},
   ): Promise<Response> {
+    const bp = defaultBasePath();
     const params = new URLSearchParams();
     if (options.redirectTo) params.set('callbackUrl', options.redirectTo);
     const paramStr = params.toString();
