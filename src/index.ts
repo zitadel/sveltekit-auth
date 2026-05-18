@@ -17,6 +17,8 @@ export type {
 
 /**
  * SvelteKit Handle type — compatible with @sveltejs/kit.
+ *
+ * @public
  */
 export type Handle = (input: {
   event: {
@@ -33,6 +35,8 @@ export type Handle = (input: {
 
 /**
  * SvelteKit RequestEvent type.
+ *
+ * @public
  */
 export type RequestEvent = {
   request: Request;
@@ -42,6 +46,8 @@ export type RequestEvent = {
 
 /**
  * Auth.js configuration for SvelteKit applications.
+ *
+ * @public
  */
 export type SvelteKitAuthConfig = Omit<AuthConfig, 'raw'>;
 
@@ -69,6 +75,8 @@ export type SvelteKitAuthConfig = Omit<AuthConfig, 'raw'>;
  * import { handle } from '$lib/auth/auth';
  * export { handle };
  * ```
+ *
+ * @public
  */
 export function SvelteKitAuth(config: SvelteKitAuthConfig): {
   handle: Handle;
@@ -133,6 +141,8 @@ export function SvelteKitAuth(config: SvelteKitAuthConfig): {
  *
  * const session = await getSession(event, authOptions);
  * ```
+ *
+ * @public
  */
 export async function getSession(
   event: RequestEvent,

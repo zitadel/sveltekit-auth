@@ -3,6 +3,8 @@
  *
  * @param provider - The provider ID to sign in with
  * @param options - Sign-in options
+ *
+ * @public
  */
 export async function signIn(
   provider?: string,
@@ -28,6 +30,8 @@ export async function signIn(
  * Client-side sign-out helper for SvelteKit applications.
  *
  * @param options - Sign-out options
+ *
+ * @public
  */
 export async function signOut(
   options: { callbackUrl?: string; redirect?: boolean } = {},
