@@ -145,27 +145,25 @@ export function SvelteKitAuth(rawConfig: SvelteKitAuthConfigOrFactory): {
     provider?: string,
     options: { redirectTo?: string } = {},
   ): Promise<Response> {
-    const bp = defaultBasePath();
+    const basePath = defaultBasePath();
     const params = new URLSearchParams();
     if (options.redirectTo) params.set('callbackUrl', options.redirectTo);
     const paramStr = params.toString();
     const url = provider
-      ? `${bp}/signin/${provider}${paramStr ? `?${paramStr}` : ''}`
-      : `${bp}/signin${paramStr ? `?${paramStr}` : ''}`;
+      ? `${basePath}/signin/${provider}${paramStr ? `?${paramStr}` : ''}`
+      : `${basePath}/signin${paramStr ? `?${paramStr}` : ''}`;
     return Response.redirect(url, 302);
   }
 
   async function signOut(
     options: { redirectTo?: string } = {},
   ): Promise<Response> {
-    const bp = defaultBasePath();
+    const basePath = defaultBasePath();
     const params = new URLSearchParams();
     if (options.redirectTo) params.set('callbackUrl', options.redirectTo);
     const paramStr = params.toString();
-    return Response.redirect(
-      `${bp}/signout${paramStr ? `?${paramStr}` : ''}`,
-      302,
-    );
+    const url = `${basePath}/signout${paramStr ? `?${paramStr}` : ''}`;
+    return Response.redirect(url, 302);
   }
 
   return { handle, signIn, signOut };
