@@ -24,20 +24,20 @@ afterEach(() => {
 
 describe('SvelteKit Auth Client', () => {
   describe('signIn', () => {
-    it('should set window.location.href to /auth/signin/{provider} when provider is given', async () => {
+    it('should set window.location.href to /api/auth/signin/{provider} when provider is given', async () => {
       const { signIn } = await import('../src/client.js');
 
       await signIn('zitadel');
 
-      expect(locationHref).toBe('/auth/signin/zitadel');
+      expect(locationHref).toBe('/api/auth/signin/zitadel');
     });
 
-    it('should set window.location.href to /auth/signin when no provider is given', async () => {
+    it('should set window.location.href to /api/auth/signin when no provider is given', async () => {
       const { signIn } = await import('../src/client.js');
 
       await signIn();
 
-      expect(locationHref).toBe('/auth/signin');
+      expect(locationHref).toBe('/api/auth/signin');
     });
 
     it('should append callbackUrl as encoded query param when callbackUrl is provided with a provider', async () => {
@@ -46,7 +46,7 @@ describe('SvelteKit Auth Client', () => {
       await signIn('zitadel', { callbackUrl: '/dashboard' });
 
       expect(locationHref).toBe(
-        '/auth/signin/zitadel?callbackUrl=%2Fdashboard',
+        '/api/auth/signin/zitadel?callbackUrl=%2Fdashboard',
       );
     });
 
@@ -55,7 +55,7 @@ describe('SvelteKit Auth Client', () => {
 
       await signIn(undefined, { callbackUrl: '/home' });
 
-      expect(locationHref).toBe('/auth/signin?callbackUrl=%2Fhome');
+      expect(locationHref).toBe('/api/auth/signin?callbackUrl=%2Fhome');
     });
 
     it('should not append query string when callbackUrl is not provided', async () => {
@@ -63,7 +63,7 @@ describe('SvelteKit Auth Client', () => {
 
       await signIn('zitadel', {});
 
-      expect(locationHref).toBe('/auth/signin/zitadel');
+      expect(locationHref).toBe('/api/auth/signin/zitadel');
     });
 
     it('should encode special characters in callbackUrl', async () => {
@@ -72,7 +72,7 @@ describe('SvelteKit Auth Client', () => {
       await signIn('zitadel', { callbackUrl: '/path?foo=bar&baz=qux' });
 
       expect(locationHref).toBe(
-        '/auth/signin/zitadel?callbackUrl=%2Fpath%3Ffoo%3Dbar%26baz%3Dqux',
+        '/api/auth/signin/zitadel?callbackUrl=%2Fpath%3Ffoo%3Dbar%26baz%3Dqux',
       );
     });
 
@@ -86,12 +86,12 @@ describe('SvelteKit Auth Client', () => {
   });
 
   describe('signOut', () => {
-    it('should set window.location.href to /auth/signout', async () => {
+    it('should set window.location.href to /api/auth/signout', async () => {
       const { signOut } = await import('../src/client.js');
 
       await signOut();
 
-      expect(locationHref).toBe('/auth/signout');
+      expect(locationHref).toBe('/api/auth/signout');
     });
 
     it('should append callbackUrl as encoded query param when provided', async () => {
@@ -99,7 +99,7 @@ describe('SvelteKit Auth Client', () => {
 
       await signOut({ callbackUrl: '/' });
 
-      expect(locationHref).toBe('/auth/signout?callbackUrl=%2F');
+      expect(locationHref).toBe('/api/auth/signout?callbackUrl=%2F');
     });
 
     it('should append callbackUrl for a nested path', async () => {
@@ -107,7 +107,7 @@ describe('SvelteKit Auth Client', () => {
 
       await signOut({ callbackUrl: '/goodbye' });
 
-      expect(locationHref).toBe('/auth/signout?callbackUrl=%2Fgoodbye');
+      expect(locationHref).toBe('/api/auth/signout?callbackUrl=%2Fgoodbye');
     });
 
     it('should not append query string when callbackUrl is not provided', async () => {
@@ -115,7 +115,7 @@ describe('SvelteKit Auth Client', () => {
 
       await signOut({});
 
-      expect(locationHref).toBe('/auth/signout');
+      expect(locationHref).toBe('/api/auth/signout');
     });
 
     it('should not navigate when redirect is false', async () => {

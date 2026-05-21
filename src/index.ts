@@ -121,19 +121,19 @@ export function SvelteKitAuth(rawConfig: SvelteKitAuthConfigOrFactory): {
 } {
   function resolveConfig(event: RequestEvent): SvelteKitAuthConfig {
     const c = typeof rawConfig === 'function' ? rawConfig(event) : rawConfig;
-    c.basePath ??= '/auth';
+    c.basePath ??= '/api/auth';
     setEnvDefaults(process.env, c);
     return c;
   }
 
   function defaultBasePath(): string {
-    if (typeof rawConfig === 'function') return '/auth';
-    return (rawConfig.basePath ?? '/auth').replace(/\/$/, '');
+    if (typeof rawConfig === 'function') return '/api/auth';
+    return (rawConfig.basePath ?? '/api/auth').replace(/\/$/, '');
   }
 
   const handle: Handle = async ({ event, resolve }) => {
     const config = resolveConfig(event as RequestEvent);
-    const bp = (config.basePath ?? '/auth').replace(/\/$/, '');
+    const bp = (config.basePath ?? '/api/auth').replace(/\/$/, '');
     if (event.url.pathname.startsWith(bp + '/')) {
       const response = await Auth(event.request, config);
       return response;
@@ -192,7 +192,7 @@ export async function getSession(
   event: RequestEvent,
   config: SvelteKitAuthConfig,
 ): Promise<Session | null> {
-  config.basePath ??= '/auth';
+  config.basePath ??= '/api/auth';
   setEnvDefaults(process.env, config);
 
   const url = createActionURL(

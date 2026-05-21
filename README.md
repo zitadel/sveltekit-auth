@@ -48,8 +48,8 @@ npm install @zitadel/sveltekit-auth @auth/core
 ## Usage
 
 To use this integration, call `SvelteKitAuth()` and export the resulting
-`handle` hook from `hooks.server.ts`. Auth routes are served at `/auth/*`
-by default (SvelteKit convention).
+`handle` hook from `hooks.server.ts`. Auth routes are served at
+`/api/auth/*` by default.
 
 First, create your auth configuration:
 
@@ -181,14 +181,14 @@ export const { handle } = SvelteKitAuth({
 
 ## Known Issues
 
-- **Auth Base Path:** By default, auth routes are served at `/auth/*` (not
-  `/api/auth/*`) to align with SvelteKit conventions. Configure `basePath` in
-  your `SvelteKitAuth` options if you need a different path.
+- **Auth Base Path:** By default, auth routes are served at `/api/auth/*`,
+  matching the convention used by the other Zitadel SDK families. Configure
+  `basePath` in your `SvelteKitAuth` options if you need a different path.
 - **Environment Configuration:** The integration relies on `AUTH_SECRET` and,
   in many hosting scenarios, `AUTH_TRUST_HOST`. Ensure these are correctly set
   in your environment for production.
 - **Callback URLs:** OAuth providers must be configured with the correct
-  callback URL: `[origin]/auth/callback/[provider]`.
+  callback URL: `[origin]/api/auth/callback/[provider]`.
 - **Type Augmentation:** If you attach additional properties (e.g., roles) to
   the Auth.js user object, extend your app's types accordingly so consumers of
   `session.user` remain type-safe.

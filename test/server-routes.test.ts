@@ -8,7 +8,7 @@ jest.setTimeout(120_000);
 
 const PORT = 3853;
 const BASE_URL = `http://localhost:${PORT}`;
-const AUTH_BASE = `${BASE_URL}/auth`;
+const AUTH_BASE = `${BASE_URL}/api/auth`;
 const AUTH_SECRET = 'test-secret-for-e2e-testing-only-32ch';
 
 let devServer: ChildProcess;

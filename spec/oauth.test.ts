@@ -5,7 +5,7 @@ import path from 'path';
 
 const OAUTH_PORT = 3851;
 const BASE_URL = `http://localhost:${OAUTH_PORT}`;
-const AUTH_SIGNIN_URL = '/auth/signin';
+const AUTH_SIGNIN_URL = '/api/auth/signin';
 
 let container: Awaited<
   ReturnType<InstanceType<typeof GenericContainer>['start']>
@@ -125,9 +125,12 @@ test('full sign-in and sign-out cycle', async ({ page }) => {
   await page.goto('/');
   await page.click('[data-testid="signout-button"]');
   await page.locator('button[type="submit"]').click();
-  await page.waitForURL((url) => !url.pathname.startsWith('/auth/signout'), {
-    timeout: 10_000,
-  });
+  await page.waitForURL(
+    (url) => !url.pathname.startsWith('/api/auth/signout'),
+    {
+      timeout: 10_000,
+    },
+  );
   await expect(
     page.locator('[data-testid="signin-credentials"]'),
   ).toBeVisible();

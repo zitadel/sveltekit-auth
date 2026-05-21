@@ -120,14 +120,14 @@
             </div>
             <div class="mb-6 flex flex-col gap-3">
               <a
-                href="/auth/signin"
+                href="/api/auth/signin"
                 data-testid="signin-credentials"
                 class="flex w-full cursor-pointer items-center justify-center rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition duration-200 hover:bg-blue-700"
               >
                 Sign in with Credentials
               </a>
               <a
-                href="/auth/signin"
+                href="/api/auth/signin"
                 data-testid="signin-oauth"
                 class="flex w-full cursor-pointer items-center justify-center rounded-lg border border-blue-600 px-4 py-3 font-semibold text-blue-600 transition duration-200 hover:bg-blue-50"
               >

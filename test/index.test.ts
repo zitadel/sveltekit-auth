@@ -110,8 +110,8 @@ describe('SvelteKit Auth Package', () => {
     });
   });
 
-  describe('signIn URL construction with default basePath /auth', () => {
-    it('should redirect to /auth/signin/{provider} when provider is given', async () => {
+  describe('signIn URL construction with default basePath /api/auth', () => {
+    it('should redirect to /api/auth/signin/{provider} when provider is given', async () => {
       const { SvelteKitAuth } = await import('../src/index.js');
 
       const { signIn } = SvelteKitAuth({
@@ -121,10 +121,10 @@ describe('SvelteKit Auth Package', () => {
       const response = await signIn('zitadel');
 
       expect(response.status).toBe(302);
-      expect(response.headers.get('location')).toBe('/auth/signin/zitadel');
+      expect(response.headers.get('location')).toBe('/api/auth/signin/zitadel');
     });
 
-    it('should redirect to /auth/signin when no provider is given', async () => {
+    it('should redirect to /api/auth/signin when no provider is given', async () => {
       const { SvelteKitAuth } = await import('../src/index.js');
 
       const { signIn } = SvelteKitAuth({
@@ -134,7 +134,7 @@ describe('SvelteKit Auth Package', () => {
       const response = await signIn();
 
       expect(response.status).toBe(302);
-      expect(response.headers.get('location')).toBe('/auth/signin');
+      expect(response.headers.get('location')).toBe('/api/auth/signin');
     });
 
     it('should append callbackUrl as redirectTo query param', async () => {
@@ -148,7 +148,7 @@ describe('SvelteKit Auth Package', () => {
 
       expect(response.status).toBe(302);
       expect(response.headers.get('location')).toBe(
-        '/auth/signin/zitadel?callbackUrl=%2Fdashboard',
+        '/api/auth/signin/zitadel?callbackUrl=%2Fdashboard',
       );
     });
 
@@ -163,7 +163,7 @@ describe('SvelteKit Auth Package', () => {
 
       expect(response.status).toBe(302);
       expect(response.headers.get('location')).toBe(
-        '/auth/signin?callbackUrl=%2Fhome',
+        '/api/auth/signin?callbackUrl=%2Fhome',
       );
     });
 
@@ -177,12 +177,12 @@ describe('SvelteKit Auth Package', () => {
       const response = await signIn('zitadel', {});
 
       expect(response.status).toBe(302);
-      expect(response.headers.get('location')).toBe('/auth/signin/zitadel');
+      expect(response.headers.get('location')).toBe('/api/auth/signin/zitadel');
     });
   });
 
-  describe('signOut URL construction with default basePath /auth', () => {
-    it('should redirect to /auth/signout', async () => {
+  describe('signOut URL construction with default basePath /api/auth', () => {
+    it('should redirect to /api/auth/signout', async () => {
       const { SvelteKitAuth } = await import('../src/index.js');
 
       const { signOut } = SvelteKitAuth({
@@ -192,7 +192,7 @@ describe('SvelteKit Auth Package', () => {
       const response = await signOut();
 
       expect(response.status).toBe(302);
-      expect(response.headers.get('location')).toBe('/auth/signout');
+      expect(response.headers.get('location')).toBe('/api/auth/signout');
     });
 
     it('should append callbackUrl as redirectTo query param on signOut', async () => {
@@ -206,7 +206,7 @@ describe('SvelteKit Auth Package', () => {
 
       expect(response.status).toBe(302);
       expect(response.headers.get('location')).toBe(
-        '/auth/signout?callbackUrl=%2F',
+        '/api/auth/signout?callbackUrl=%2F',
       );
     });
 
@@ -220,7 +220,7 @@ describe('SvelteKit Auth Package', () => {
       const response = await signOut({});
 
       expect(response.status).toBe(302);
-      expect(response.headers.get('location')).toBe('/auth/signout');
+      expect(response.headers.get('location')).toBe('/api/auth/signout');
     });
   });
 

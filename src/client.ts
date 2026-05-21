@@ -10,7 +10,7 @@ export async function signIn(
   provider?: string,
   options: { callbackUrl?: string; redirect?: boolean } = {},
 ): Promise<void> {
-  const basePath = '/auth';
+  const basePath = '/api/auth';
   const params = new URLSearchParams();
   if (options.callbackUrl) {
     params.set('callbackUrl', options.callbackUrl);
@@ -36,7 +36,7 @@ export async function signIn(
 export async function signOut(
   options: { callbackUrl?: string; redirect?: boolean } = {},
 ): Promise<void> {
-  const basePath = '/auth';
+  const basePath = '/api/auth';
   const params = new URLSearchParams();
   if (options.callbackUrl) {
     params.set('callbackUrl', options.callbackUrl);

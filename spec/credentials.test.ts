@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
-const AUTH_SIGNIN_URL = '/auth/signin';
-const AUTH_SIGNOUT_URL = '/auth/signout';
+const AUTH_SIGNIN_URL = '/api/auth/signin';
+const AUTH_SIGNOUT_URL = '/api/auth/signout';
 
 async function signInWithCredentials(page: Page): Promise<void> {
   await page.goto(AUTH_SIGNIN_URL);
@@ -17,7 +17,7 @@ async function signInWithCredentials(page: Page): Promise<void> {
 async function signOutUser(page: Page): Promise<void> {
   await page.click('[data-testid="signout-button"]');
   await page.locator('button[type="submit"]').click();
-  await page.waitForURL((url) => !url.pathname.startsWith('/auth/signin'), {
+  await page.waitForURL((url) => !url.pathname.startsWith('/api/auth/signin'), {
     timeout: 10_000,
   });
 }
@@ -122,9 +122,12 @@ test.describe('Open redirect prevention', () => {
     await signInWithCredentials(page);
     await page.goto(`${AUTH_SIGNOUT_URL}?callbackUrl=https://evil.example.com`);
     await page.locator('button[type="submit"]').click();
-    await page.waitForURL((url) => !url.pathname.startsWith('/auth/signout'), {
-      timeout: 10_000,
-    });
+    await page.waitForURL(
+      (url) => !url.pathname.startsWith('/api/auth/signout'),
+      {
+        timeout: 10_000,
+      },
+    );
     expect(page.url()).not.toContain('evil.example.com');
   });
 });
