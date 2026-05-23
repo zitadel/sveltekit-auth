@@ -113,6 +113,7 @@ export type SvelteKitAuthConfigOrFactory =
  */
 export function SvelteKitAuth(rawConfig: SvelteKitAuthConfigOrFactory): {
   handle: Handle;
+  getSession: (event: RequestEvent) => Promise<Session | null>;
   signIn: (
     provider?: string,
     options?: { redirectTo?: string },
@@ -202,7 +203,25 @@ export function SvelteKitAuth(rawConfig: SvelteKitAuthConfigOrFactory): {
     });
   }
 
-  return { handle, signIn, signInUrl, signOut, signOutUrl };
+  /**
+   * Bound to the factory's resolved config so callers don't need to pass
+   * `authOptions` explicitly. Matches the canonical factory return shape
+   * used by next-auth / remix-auth / solidstart-auth / tanstack-auth. The
+   * standalone `getSession(event, config)` export remains available for
+   * callers that prefer the explicit form.
+   */
+  async function getSessionBound(event: RequestEvent): Promise<Session | null> {
+    return getSession(event, resolveConfig(event));
+  }
+
+  return {
+    handle,
+    getSession: getSessionBound,
+    signIn,
+    signInUrl,
+    signOut,
+    signOutUrl,
+  };
 }
 
 /**
