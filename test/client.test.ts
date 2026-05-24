@@ -76,13 +76,6 @@ describe('SvelteKit Auth Client', () => {
       );
     });
 
-    it('should not navigate when redirect is false', async () => {
-      const { signIn } = await import('../src/client.js');
-
-      await signIn('zitadel', { redirect: false });
-
-      expect(locationHref).toBe('');
-    });
   });
 
   describe('signOut', () => {
@@ -118,13 +111,6 @@ describe('SvelteKit Auth Client', () => {
       expect(locationHref).toBe('/api/auth/signout');
     });
 
-    it('should not navigate when redirect is false', async () => {
-      const { signOut } = await import('../src/client.js');
-
-      await signOut({ redirect: false });
-
-      expect(locationHref).toBe('');
-    });
   });
 
   describe('module exports', () => {

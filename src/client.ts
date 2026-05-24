@@ -8,7 +8,7 @@
  */
 export async function signIn(
   provider?: string,
-  options: { callbackUrl?: string; redirect?: boolean } = {},
+  options: { callbackUrl?: string } = {},
 ): Promise<void> {
   const basePath = '/api/auth';
   const params = new URLSearchParams();
@@ -20,9 +20,6 @@ export async function signIn(
     ? `${basePath}/signin/${provider}${paramStr ? `?${paramStr}` : ''}`
     : `${basePath}/signin${paramStr ? `?${paramStr}` : ''}`;
 
-  if (options.redirect === false) {
-    return;
-  }
   window.location.href = url;
 }
 
@@ -34,7 +31,7 @@ export async function signIn(
  * @public
  */
 export async function signOut(
-  options: { callbackUrl?: string; redirect?: boolean } = {},
+  options: { callbackUrl?: string } = {},
 ): Promise<void> {
   const basePath = '/api/auth';
   const params = new URLSearchParams();
@@ -44,8 +41,5 @@ export async function signOut(
   const paramStr = params.toString();
   const url = `${basePath}/signout${paramStr ? `?${paramStr}` : ''}`;
 
-  if (options.redirect === false) {
-    return;
-  }
   window.location.href = url;
 }
