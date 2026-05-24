@@ -2,6 +2,7 @@
 title: Quick Start
 group: Auth.js Provider
 children:
+  - ./sveltekit-auth-handler.md
   - ./session-data.md
   - ./custom-pages.md
   - ./server-side/session-access.md
