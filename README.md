@@ -181,9 +181,6 @@ export const { handle } = SvelteKitAuth({
 
 ## Known Issues
 
-- **Auth Base Path:** By default, auth routes are served at `/api/auth/*`,
-  matching the convention used by the other Zitadel SDK families. Configure
-  `basePath` in your `SvelteKitAuth` options if you need a different path.
 - **Environment Configuration:** The integration relies on `AUTH_SECRET` and,
   in many hosting scenarios, `AUTH_TRUST_HOST`. Ensure these are correctly set
   in your environment for production.
