@@ -75,7 +75,6 @@ describe('SvelteKit Auth Client', () => {
         '/api/auth/signin/zitadel?callbackUrl=%2Fpath%3Ffoo%3Dbar%26baz%3Dqux',
       );
     });
-
   });
 
   describe('signOut', () => {
@@ -110,7 +109,6 @@ describe('SvelteKit Auth Client', () => {
 
       expect(locationHref).toBe('/api/auth/signout');
     });
-
   });
 
   describe('module exports', () => {
