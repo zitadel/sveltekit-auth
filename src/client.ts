@@ -19,7 +19,6 @@ export async function signIn(
   const url = provider
     ? `${basePath}/signin/${provider}${paramStr ? `?${paramStr}` : ''}`
     : `${basePath}/signin${paramStr ? `?${paramStr}` : ''}`;
-
   window.location.href = url;
 }
 
@@ -39,7 +38,5 @@ export async function signOut(
     params.set('callbackUrl', options.callbackUrl);
   }
   const paramStr = params.toString();
-  const url = `${basePath}/signout${paramStr ? `?${paramStr}` : ''}`;
-
-  window.location.href = url;
+  window.location.href = `${basePath}/signout${paramStr ? `?${paramStr}` : ''}`;
 }
