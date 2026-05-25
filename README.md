@@ -181,6 +181,9 @@ export const { handle } = SvelteKitAuth({
 
 ## Known Issues
 
+- **SvelteKit Hook Required:** The integration must be wired as the `handle`
+  hook in `src/hooks.server.ts`. Without this hook, auth routes will not be
+  intercepted and `event.locals.session` will not be populated.
 - **Environment Configuration:** The integration relies on `AUTH_SECRET` and,
   in many hosting scenarios, `AUTH_TRUST_HOST`. Ensure these are correctly set
   in your environment for production.
