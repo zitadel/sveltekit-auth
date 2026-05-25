@@ -1,4 +1,4 @@
-import { ZITADEL_DOMAIN } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types';
 import { json } from '@sveltejs/kit';
 
@@ -31,7 +31,7 @@ export const GET: RequestHandler = async (event) => {
   }
 
   try {
-    const response = await fetch(`${ZITADEL_DOMAIN}/oidc/v1/userinfo`, {
+    const response = await fetch(`${env.ZITADEL_DOMAIN}/oidc/v1/userinfo`, {
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
       },
