@@ -199,7 +199,6 @@ export function SvelteKitAuth(rawConfig: SvelteKitAuthConfigOrFactory): {
     return `${basePath}/signout${paramStr ? `?${paramStr}` : ''}`;
   }
 
-
   /**
    * Server-side helper to start the Auth.js sign-in flow.
    *
@@ -232,7 +231,6 @@ export function SvelteKitAuth(rawConfig: SvelteKitAuthConfigOrFactory): {
       headers: { Location: signInUrl(options) },
     });
   }
-
 
   /**
    * Server-side helper to start the Auth.js sign-out flow.
