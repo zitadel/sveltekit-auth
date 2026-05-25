@@ -1,29 +1,27 @@
-# SvelteKit Auth.js
+# SvelteKit Auth
 
-A [SvelteKit](https://svelte.dev/docs/kit/introduction) integration for
-[Auth.js](https://authjs.dev/) that provides seamless authentication with
+A [SvelteKit](https://svelte.dev/docs/kit/introduction) integration that provides seamless authentication with
 multiple providers, session management, and SvelteKit-native hook patterns.
 
-This integration brings the power and flexibility of Auth.js to SvelteKit
+This integration brings the power and flexibility of OAuth to SvelteKit
 applications with full TypeScript support, SSR-friendly HTTP handling,
 and SvelteKit-native patterns including server hooks and load functions.
 
 ### Why?
 
 Modern web applications require robust, secure, and flexible authentication
-systems. While Auth.js provides excellent authentication capabilities,
-integrating it with SvelteKit applications requires careful consideration of
+systems. Integrating OAuth and session management with SvelteKit applications requires careful consideration of
 framework patterns, server-side rendering, and TypeScript integration.
 
 However, a direct integration isn't always straightforward. Different types
 of applications or deployment scenarios might warrant different approaches:
 
-- **Hook Integration:** Auth.js operates at the HTTP level, while SvelteKit
+- **Hook Integration:** OAuth and auth flows operate at the HTTP level, while SvelteKit
   uses server hooks (`hooks.server.ts`) and load functions. A proper integration
   should bridge this gap by providing a `handle` hook that intercepts auth
   routes and populates `event.locals` transparently.
 - **HTTP Request Handling:** SvelteKit's hooks receive `RequestEvent` objects.
-  This integration handles the protocol bridging so Auth.js and SvelteKit's
+  This integration handles the protocol bridging so OAuth and SvelteKit's
   request lifecycle work seamlessly together.
 - **Session and Request Lifecycle:** Proper session handling in SvelteKit
   requires SSR-friendly utilities that work across server-rendered pages and
@@ -33,7 +31,7 @@ of applications or deployment scenarios might warrant different approaches:
   primitive for protecting routes and layouts.
 
 This integration, `@zitadel/sveltekit-auth`, aims to provide the flexibility
-to handle such scenarios. It allows you to leverage the full Auth.js ecosystem
+to handle such scenarios. It allows you to leverage the full OAuth provider ecosystem
 while maintaining SvelteKit best practices, ultimately leading to a more
 effective and less burdensome authentication implementation.
 
@@ -55,10 +53,10 @@ First, create your auth configuration:
 
 ```ts
 // src/lib/auth/auth.ts
-import { SvelteKitAuth } from '@zitadel/sveltekit-auth';
+import { SvelteKitAuth, type SvelteKitAuthConfig } from '@zitadel/sveltekit-auth';
 import Zitadel from '@auth/core/providers/zitadel';
 
-export const { handle } = SvelteKitAuth({
+export const authConfig: SvelteKitAuthConfig = {
   providers: [
     Zitadel({
       clientId: process.env.ZITADEL_CLIENT_ID,
@@ -68,7 +66,9 @@ export const { handle } = SvelteKitAuth({
   ],
   secret: process.env.AUTH_SECRET,
   trustHost: true,
-});
+};
+
+export const { handle, getSession } = SvelteKitAuth(authConfig);
 ```
 
 Then export the hook:
@@ -137,16 +137,16 @@ Prefer a dedicated sign-in page? Use the client helpers directly:
 
 ##### Example: Advanced Configuration with Multiple Providers
 
-This example shows how to use the integration with multiple Auth.js
+This example shows how to use the integration with multiple OAuth
 providers and custom session configuration:
 
 ```ts
 // src/lib/auth/auth.ts
-import { SvelteKitAuth } from '@zitadel/sveltekit-auth';
+import { SvelteKitAuth, type SvelteKitAuthConfig } from '@zitadel/sveltekit-auth';
 import Zitadel from '@auth/core/providers/zitadel';
 import Google from '@auth/core/providers/google';
 
-export const { handle } = SvelteKitAuth({
+export const authConfig: SvelteKitAuthConfig = {
   providers: [
     Zitadel({
       clientId: process.env.ZITADEL_CLIENT_ID,
@@ -176,7 +176,9 @@ export const { handle } = SvelteKitAuth({
       return session;
     },
   },
-});
+};
+
+export const { handle, getSession } = SvelteKitAuth(authConfig);
 ```
 
 ## Known Issues
@@ -190,7 +192,7 @@ export const { handle } = SvelteKitAuth({
 - **Callback URLs:** OAuth providers must be configured with the correct
   callback URL: `[origin]/api/auth/callback/[provider]`.
 - **Type Augmentation:** If you attach additional properties (e.g., roles) to
-  the Auth.js user object, extend your app's types accordingly so consumers of
+  the user session object, extend your app's types accordingly so consumers of
   `session.user` remain type-safe.
 - **Redirect Semantics:** OAuth providers expect real browser navigations during
   sign-in. The client helpers handle this for you — avoid manual `fetch()` calls
@@ -198,12 +200,8 @@ export const { handle } = SvelteKitAuth({
 
 ## Useful links
 
-- **[Auth.js](https://authjs.dev/):** The authentication library that this
-  integration is built upon.
 - **[SvelteKit](https://svelte.dev/docs/kit/introduction):** The framework
   this integration targets.
-- **[Auth.js Providers](https://authjs.dev/getting-started/providers):**
-  Complete list of supported authentication providers.
 
 ## Contributing
 
