@@ -98,5 +98,8 @@
   "bugs": "https://github.com/zitadel/sveltekit-auth/issues",
   "publishConfig": {
     "access": "public"
+  },
+  "overrides": {
+    "cookie": "^0.7.0"
   }
 }
