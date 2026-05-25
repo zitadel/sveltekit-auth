@@ -1,6 +1,6 @@
 ---
 title: Quick Start
-group: Auth.js Provider
+group: OAuth Provider
 children:
   - ./sveltekit-auth-handler.md
   - ./session-data.md
@@ -9,10 +9,10 @@ children:
   - ./server-side/rest-api.md
 ---
 
-# Auth.js Quick Start
+# OAuth Quick Start
 
 This guide walks through setting up `@zitadel/sveltekit-auth` with the
-Auth.js provider, suitable for OAuth, magic links, and credentials sign-in.
+OAuth provider, suitable for OAuth, magic links, and credentials sign-in.
 
 ## Installation
 
@@ -52,7 +52,7 @@ Wire the `handle` hook into `src/hooks.server.ts`:
 export { handle } from '$lib/auth';
 ```
 
-The handle intercepts requests under `/api/auth/*` and serves Auth.js
+The handle intercepts requests under `/api/auth/*` and serves OAuth
 endpoints; everything else passes through to your routes.
 
 ## Set the secret

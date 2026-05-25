@@ -1,11 +1,11 @@
 ---
 title: SvelteKitAuth Factory
-group: Auth.js Provider
+group: OAuth Provider
 ---
 
 # SvelteKitAuth Factory
 
-The `SvelteKitAuth()` factory wires up the Auth.js handler and returns
+The `SvelteKitAuth()` factory wires up the auth handler and returns
 helpers bound to your config. Call it once in `src/lib/auth.ts`:
 
 ```ts

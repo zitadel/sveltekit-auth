@@ -9,7 +9,7 @@ children:
 
 `@zitadel/sveltekit-auth` is an open source library that provides
 authentication for SvelteKit applications. It wraps
-[Auth.js](https://authjs.dev/) (`@auth/core`) to bring OAuth, credentials, and
+auth (`@auth/core`) to bring OAuth, credentials, and
 magic-link authentication to SvelteKit with a native developer experience.
 
 Through a direct integration into SvelteKit hooks, you can access and utilize
