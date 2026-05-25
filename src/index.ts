@@ -1,3 +1,31 @@
+/**
+ * Auth.js integration for SvelteKit.
+ *
+ * Provides authentication via Auth.js with support for OAuth providers,
+ * credentials, JWT sessions, and SvelteKit's `handle` hook pattern.
+ *
+ * @packageDocumentation
+ *
+ * @example Basic usage
+ * ```ts
+ * // src/lib/auth/auth.ts
+ * import { SvelteKitAuth } from '@zitadel/sveltekit-auth';
+ * import Zitadel from '@auth/core/providers/zitadel';
+ *
+ * export const { handle, getSession, signIn, signOut } = SvelteKitAuth({
+ *   providers: [Zitadel({ clientId: process.env.ZITADEL_CLIENT_ID! })],
+ * });
+ * ```
+ *
+ * @example Wiring the hook
+ * ```ts
+ * // src/hooks.server.ts
+ * export { handle } from '$lib/auth/auth';
+ * ```
+ *
+ * @public
+ */
+
 import {
   Auth,
   type AuthConfig,
