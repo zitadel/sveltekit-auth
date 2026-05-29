@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { signIn } from '@zitadel/sveltekit-auth/client';
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
 
@@ -119,19 +120,28 @@
               </div>
             </div>
             <div class="mb-6 flex flex-col gap-3">
+              <button
+                type="button"
+                onclick={() => signIn('mock-oidc', { callbackUrl: '/profile' })}
+                data-testid="signin-oauth"
+                class="flex w-full cursor-pointer items-center justify-center rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition duration-200 hover:bg-blue-700"
+              >
+                Sign in with OAuth
+              </button>
+              <button
+                type="button"
+                onclick={() => signIn()}
+                data-testid="signin-default"
+                class="flex w-full cursor-pointer items-center justify-center rounded-lg border border-blue-600 px-4 py-3 font-semibold text-blue-600 transition duration-200 hover:bg-blue-50"
+              >
+                Sign in
+              </button>
               <a
                 href="/api/auth/signin"
                 data-testid="signin-credentials"
-                class="flex w-full cursor-pointer items-center justify-center rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition duration-200 hover:bg-blue-700"
+                class="flex w-full cursor-pointer items-center justify-center text-sm font-medium text-blue-600 transition duration-200 hover:text-blue-700"
               >
                 Sign in with Credentials
-              </a>
-              <a
-                href="/api/auth/signin"
-                data-testid="signin-oauth"
-                class="flex w-full cursor-pointer items-center justify-center rounded-lg border border-blue-600 px-4 py-3 font-semibold text-blue-600 transition duration-200 hover:bg-blue-50"
-              >
-                Sign in with OAuth
               </a>
             </div>
             <div class="text-center">
